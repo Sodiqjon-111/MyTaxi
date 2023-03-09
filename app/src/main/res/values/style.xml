@@ -3,7 +3,7 @@
 
     <style name="RegularTextStyle">
         <item name="android:textColor">@color/textRegularColor</item>
-        <item name="android:textSize">@dimen/normalTextSize</item>
+        <item name="android:textSize">@dimen/smallTextSize</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
 

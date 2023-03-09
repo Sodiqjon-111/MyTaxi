@@ -17,6 +17,7 @@
     <color name="textMediumColor">#2C2C2C</color>
     <color name="startColor">#212121</color>
     <color name="endColor">#585858</color>
+    <color name="buttonColor">#00CA4C</color>
 
 
 </resources>

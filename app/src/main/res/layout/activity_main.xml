@@ -35,6 +35,35 @@
         app:srcCompat="@drawable/drawer_icon2"
         app:tint="@color/myColorBlack" />
 
+    <com.google.android.material.button.MaterialButton
+        style="@style/RegularTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:background="@drawable/left_button_back"
+        android:backgroundTint="@color/buttonColor"
+        android:text="@string/cвободен"
+        android:textColor="@color/myColorWhite"
+        app:backgroundTint="@color/buttonColor"
+        app:layout_constraintEnd_toStartOf="@id/guidlineVertical"
+        app:layout_constraintStart_toEndOf="@id/drawerMenuBtn"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/RegularTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:background="@drawable/right_button_back"
+        android:text="@string/анят"
+        android:textColor="@color/textRegularColor"
+        app:backgroundTint="@color/myColorWhite"
+        app:layout_constraintEnd_toStartOf="@id/notificationBtn"
+        app:layout_constraintStart_toEndOf="@id/guidlineVertical"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/notificationBtn"
         android:layout_width="wrap_content"
@@ -54,6 +83,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidlineVertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -125,7 +161,7 @@
         app:layout_constraintEnd_toStartOf="@id/borderBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:maxImageSize="@dimen/_20sdp"
-        app:srcCompat="@drawable/exchange" />
+        app:srcCompat="@drawable/exchange_icon" />
 
     <TextView
         android:id="@+id/textOrder"
@@ -150,7 +186,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:maxImageSize="@dimen/_20sdp"
-        app:srcCompat="@drawable/rocket" />
+        app:srcCompat="@drawable/rocket_icon" />
 
     <TextView
         android:id="@+id/textBorder"
@@ -175,7 +211,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/borderBtn"
         app:maxImageSize="@dimen/_20sdp"
-        app:srcCompat="@drawable/tarif" />
+        app:srcCompat="@drawable/tarif_icon" />
 
     <TextView
         android:id="@+id/textRates"

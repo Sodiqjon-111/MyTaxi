@@ -16,5 +16,9 @@
     <color name="menuColor">#3D50DF</color>
     <color name="textRegularColor">#1E1E1E</color>
     <color name="textMediumColor">#2C2C2C</color>
+    <color name="startColor">#212121</color>
+    <color name="endColor">#585858</color>
+
+    <color name="buttonColor">#BEBEBE</color>
 
 </resources>

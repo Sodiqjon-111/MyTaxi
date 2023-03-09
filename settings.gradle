@@ -14,7 +14,6 @@ pluginManagement {
                 username = "mapbox"
                 // Use the secret token you stored in gradle.properties as the password
                 password = "sk.eyJ1Ijoic29kaXFqb24iLCJhIjoiY2xleTR0N3dxMDFrODQwbDNpMjg1cm9mdSJ9.bucIZA5CDpDbJbGj9ZI2Jg"
-               // password = "pk.eyJ1Ijoic29kaXFqb24iLCJhIjoiY2xleHlqMHlrMDRjcTNxa20za21rYnZkeSJ9.Aig7nxS33nXMSRbuQMsEag"
             }
         }
     }
@@ -35,7 +34,6 @@ dependencyResolutionManagement {
                 username = "mapbox"
                 // Use the secret token you stored in gradle.properties as the password
                 password = "sk.eyJ1Ijoic29kaXFqb24iLCJhIjoiY2xleTR0N3dxMDFrODQwbDNpMjg1cm9mdSJ9.bucIZA5CDpDbJbGj9ZI2Jg"
-               // password = "pk.eyJ1Ijoic29kaXFqb24iLCJhIjoiY2xleHlqMHlrMDRjcTNxa20za21rYnZkeSJ9.Aig7nxS33nXMSRbuQMsEag"
             }
         }
     }
