@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/FullScreenTheme"
+    tools:context=".MainActivity">
+
+    <com.mapbox.maps.MapView xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/mapView"
+        style="@style/Theme.AppCompat.DayNight"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        mapbox:mapbox_cameraTargetLat="40.7128"
+        mapbox:mapbox_cameraTargetLng="-74.0060"
+        mapbox:mapbox_cameraZoom="9.0" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/drawerMenuBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_12sdp"
+        android:backgroundTint="@color/myColorWhite"
+        android:contentDescription="@string/app_name"
+        app:borderWidth="0dp"
+        app:fabSize="mini"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:maxImageSize="@dimen/_14sdp"
+        app:srcCompat="@drawable/drawer_icon2"
+        app:tint="@color/myColorBlack" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/notificationBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_12sdp"
+        android:backgroundTint="@color/myColorWhite"
+        android:contentDescription="@string/app"
+        app:borderWidth="0dp"
+        app:fabSize="mini"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/notifications"
+        app:tint="@color/myColorBlack" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidlineCenter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/menuBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_12sdp"
+        android:backgroundTint="@color/myColorWhite"
+        android:contentDescription="@string/app"
+        android:src="@drawable/menu_icon"
+        app:borderWidth="0dp"
+        app:fabSize="mini"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guidlineCenter"
+        app:tint="@color/menuColor" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/plusBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_12sdp"
+        android:backgroundTint="@color/myColorWhite"
+        android:contentDescription="@string/app"
+        app:borderWidth="0dp"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toTopOf="@id/minusBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="@dimen/_14sdp"
+        app:srcCompat="@drawable/plus_icon" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/minusBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_12sdp"
+        android:backgroundTint="@color/myColorWhite"
+        android:contentDescription="@string/app"
+        app:borderWidth="0dp"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toTopOf="@id/borderBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guidlineCenter"
+        app:maxImageSize="@dimen/_14sdp"
+        app:srcCompat="@drawable/minus_icon" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/locationBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_12sdp"
+        android:backgroundTint="@color/myColorWhite"
+        android:contentDescription="@string/app"
+        app:borderWidth="0dp"
+        app:fabSize="mini"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/minusBtn"
+        app:maxImageSize="@dimen/_14sdp"
+        app:srcCompat="@drawable/location_icon" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/orderBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_6sdp"
+        android:backgroundTint="@color/myColorWhite"
+        android:contentDescription="@string/app"
+        app:borderWidth="0dp"
+        app:layout_constraintBottom_toTopOf="@id/textOrder"
+        app:layout_constraintEnd_toStartOf="@id/borderBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:maxImageSize="@dimen/_20sdp"
+        app:srcCompat="@drawable/exchange" />
+
+    <TextView
+        android:id="@+id/textOrder"
+        style="@style/MediumTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_6sdp"
+        android:text="@string/order"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/borderBtn"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/borderBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_6sdp"
+        android:backgroundTint="@color/myColorWhite"
+        android:contentDescription="@string/app"
+        app:borderWidth="0dp"
+        app:layout_constraintBottom_toTopOf="@id/textBorder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:maxImageSize="@dimen/_20sdp"
+        app:srcCompat="@drawable/rocket" />
+
+    <TextView
+        android:id="@+id/textBorder"
+        style="@style/MediumTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_6sdp"
+        android:text="@string/border"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/rateBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_6sdp"
+        android:backgroundTint="@color/myColorWhite"
+        android:contentDescription="@string/app"
+        app:borderWidth="0dp"
+        app:layout_constraintBottom_toTopOf="@id/textRates"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/borderBtn"
+        app:maxImageSize="@dimen/_20sdp"
+        app:srcCompat="@drawable/tarif" />
+
+    <TextView
+        android:id="@+id/textRates"
+        style="@style/MediumTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_6sdp"
+        android:text="@string/rates"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/borderBtn" />
+</androidx.constraintlayout.widget.ConstraintLayout>
