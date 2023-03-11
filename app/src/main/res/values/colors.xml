@@ -18,6 +18,8 @@
     <color name="startColor">#212121</color>
     <color name="endColor">#585858</color>
     <color name="buttonColor">#00CA4C</color>
+    <color name="bu">#00CA4C</color>
+    <color name="badgeColor">#EF2E2E</color>
 
 
 </resources>

@@ -1,0 +1,17 @@
+<ripple android:color="?attr/colorControlHighlight"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <layer-list>
+            <item>
+                <shape android:shape="oval">
+                    <gradient
+                        android:type="linear"
+                        android:angle="90"
+                        android:startColor="@color/startColor"
+                        android:endColor="@color/endColor" />
+                </shape>
+            </item>
+            <item android:drawable="@drawable/exchange_icon" android:gravity="center" />
+        </layer-list>
+    </item>
+</ripple>

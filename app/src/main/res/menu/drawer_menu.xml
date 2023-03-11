@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/justiceFragment"
+        android:icon="@drawable/star_icon"
+        android:title="Safar tarixi" />
+    <item
+        android:id="@+id/newsListFragment"
+        android:icon="@drawable/payment_icon"
+        android:title="To'lov" />
+    <item
+        android:id="@+id/videosFragment"
+        android:icon="@drawable/star_icon"
+        android:title="Doimiy manzillar" />
+    <item
+        android:id="@+id/huquqiyMaslahatFragment"
+        android:icon="@drawable/star_icon"
+        android:title="Chegirma kodi" />
+
+    <item
+        android:id="@+id/literacyFragment"
+        android:icon="@drawable/payment_icon"
+        android:title="Yangiliklar" />
+    <item
+        android:id="@+id/vacancyFragment"
+        android:icon="@drawable/setting"
+        android:title="Sozlanmalar" />
+</menu>

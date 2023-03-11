@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">MyTaxi</string>
-  <string name="mapbox_access_token">sk.eyJ1Ijoic29kaXFqb24iLCJhIjoiY2xleTR0N3dxMDFrODQwbDNpMjg1cm9mdSJ9.bucIZA5CDpDbJbGj9ZI2Jg</string>
+    <string name="mapbox_access_token">sk.eyJ1Ijoic29kaXFqb24iLCJhIjoiY2xleTR0N3dxMDFrODQwbDNpMjg1cm9mdSJ9.bucIZA5CDpDbJbGj9ZI2Jg</string>
     <string name="order">Зазказы</string>
     <string name="rates">Тарифы</string>
     <string name="border">Бордюр</string>
     <string name="app">app</string>
     <string name="cвободен">Свободен</string>
-  <string name="анят">Занят</string>
+    <string name="анят">Занят</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
