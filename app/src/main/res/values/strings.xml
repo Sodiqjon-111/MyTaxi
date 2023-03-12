@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">MyTaxi</string>
-    <string name="mapbox_access_token">sk.eyJ1Ijoic29kaXFqb24iLCJhIjoiY2xleTR0N3dxMDFrODQwbDNpMjg1cm9mdSJ9.bucIZA5CDpDbJbGj9ZI2Jg</string>
+<!--   // <string name="mapbox_access_token">sk.eyJ1Ijoic29kaXFqb24iLCJhIjoiY2xleTR0N3dxMDFrODQwbDNpMjg1cm9mdSJ9.bucIZA5CDpDbJbGj9ZI2Jg</string>-->
+    <string name="mapbox_access_token">pk.eyJ1Ijoic29kaXFqb24iLCJhIjoiY2xmNW9nd3U3MG5qdDQwcjBncW52OXg4YiJ9.Uzto2P56UsJhjBsx9KB57g</string>
     <string name="order">Зазказы</string>
     <string name="rates">Тарифы</string>
     <string name="border">Бордюр</string>

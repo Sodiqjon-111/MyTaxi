@@ -2,6 +2,7 @@ package com.projects.mytaxi
 
 import android.app.AlertDialog
 import android.content.BroadcastReceiver
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -14,8 +15,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -27,6 +31,7 @@ import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
 import com.mapbox.maps.extension.style.expressions.dsl.generated.interpolate
+import com.mapbox.maps.logD
 import com.mapbox.maps.plugin.LocationPuck2D
 import com.mapbox.maps.plugin.gestures.OnMoveListener
 import com.mapbox.maps.plugin.gestures.gestures
@@ -44,7 +49,6 @@ import java.lang.ref.WeakReference
 class MapFragment : Fragment() {
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
-
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private lateinit var locationPermissionHelper: LocationPermissionHelper
@@ -102,11 +106,16 @@ class MapFragment : Fragment() {
                         resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
                     if (isDarkMode) {
                         // Dark mode is now enabled
+                        Log.d(TAG, "---------light")
+                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                         binding.mapView.getMapboxMap().loadStyleUri(
                             Style.TRAFFIC_NIGHT
                         )
                     } else {
                         // Light mode is now enabled
+                        Log.d(TAG, "---------night")
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
                         binding.mapView.getMapboxMap().loadStyleUri(
                             Style.MAPBOX_STREETS
                         )
@@ -117,22 +126,29 @@ class MapFragment : Fragment() {
         requireContext().registerReceiver(broadcastReceiver, intentFilter)
 
         binding.drawerMenuBtn.setOnClickListener {
-           // activity
+          //  val view = inflater.inflate(R.layout.fragment_my, container, false)
+
+            // Get a reference to the DrawerLayout object from the activity
+            val drawerLayout = requireActivity().findViewById<DrawerLayout>(R.id.drawerLayout)
+
+            // Open the drawer
+            drawerLayout.openDrawer(GravityCompat.START)
+
         }
 
         binding.locationBtn.setOnClickListener {
             fetchLocation()
         }
-        var m=15.0
+        var m = 15.0
         binding.plusBtn.setOnClickListener {
             val mapboxMap = binding.mapView.getMapboxMap()
-          //  val cameraPosition = mapboxMap.getCamer
+            //  val cameraPosition = mapboxMap.getCamer
             binding.mapView.getMapboxMap().setCamera(
                 CameraOptions.Builder()
                     .zoom(m)
                     .build()
             )
-            m+=1.0
+            m += 1.0
         }
 
     }
@@ -163,7 +179,7 @@ class MapFragment : Fragment() {
                 // locationRepository = LocationRepository(locationInfo)
                 lifecycleScope.launch {
                     Log.d(ControlsProviderService.TAG, "++++++++++++lifeSycleScope")
-                      viewModel.insertLocation(locationInfo)
+                    // viewModel.insertLocation(locationInfo)
                 }
 
                 Log.d(

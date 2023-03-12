@@ -11,7 +11,7 @@
 
 
     <color name="myColorWhite">#FFFFFFFF</color>
-    <color name="myColorBlack">#000000</color>
+    <color name="myColorBlack">#2C2C2C</color>
     <color name="menuColor">#3D50DF</color>
     <color name="textRegularColor">#1E1E1E</color>
     <color name="textMediumColor">#2C2C2C</color>
@@ -20,6 +20,7 @@
     <color name="buttonColor">#00CA4C</color>
     <color name="bu">#00CA4C</color>
     <color name="badgeColor">#EF2E2E</color>
+    <color name="mainIconColor">#FFFFFFFF</color>
 
 
 </resources>

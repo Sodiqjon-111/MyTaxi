@@ -7,7 +7,7 @@
     android:theme="@style/FullScreenTheme"
     tools:context=".MainActivity">
 
-    <com.mapbox.maps.MapView xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    <com.mapbox.maps.MapView
         android:id="@+id/mapView"
         style="@style/Theme.AppCompat.DayNight"
         android:layout_width="match_parent"
@@ -16,9 +16,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        mapbox:mapbox_cameraTargetLat="40.7128"
-        mapbox:mapbox_cameraTargetLng="-74.0060"
-        mapbox:mapbox_cameraZoom="9.0" />
+        app:mapbox_cameraTargetLat="40.7128"
+        app:mapbox_cameraTargetLng="-74.0060"
+        app:mapbox_cameraZoom="9.0" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/drawerMenuBtn"
@@ -35,30 +35,24 @@
         app:srcCompat="@drawable/drawer_icon2"
         app:tint="@color/myColorBlack" />
 
-    <com.google.android.material.button.MaterialButton
-        style="@style/RegularTextStyle"
+    <Button
+        style="@style/myLeftButton"
         android:layout_width="0dp"
         android:layout_height="@dimen/_38sdp"
         android:layout_marginStart="@dimen/_20sdp"
         android:layout_marginTop="@dimen/_12sdp"
-        android:background="@drawable/left_button_back"
         android:text="@string/cвободен"
-        android:textColor="@color/myColorWhite"
-        app:backgroundTint="@color/buttonColor"
         app:layout_constraintEnd_toStartOf="@id/guidlineVertical"
         app:layout_constraintStart_toEndOf="@id/drawerMenuBtn"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.button.MaterialButton
-        style="@style/RegularTextStyle"
+    <Button
+        style="@style/myRightButton"
         android:layout_width="0dp"
         android:layout_height="@dimen/_38sdp"
         android:layout_marginTop="@dimen/_12sdp"
         android:layout_marginEnd="@dimen/_20sdp"
-        android:background="@drawable/right_button_back"
         android:text="@string/анят"
-        android:textColor="@color/textRegularColor"
-        app:backgroundTint="@color/myColorWhite"
         app:layout_constraintEnd_toStartOf="@id/notificationBtn"
         app:layout_constraintStart_toEndOf="@id/guidlineVertical"
         app:layout_constraintTop_toTopOf="parent" />
@@ -129,7 +123,8 @@
         app:layout_constraintBottom_toTopOf="@id/minusBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="@dimen/_14sdp"
-        app:srcCompat="@drawable/plus_icon" />
+        app:srcCompat="@drawable/plus_icon"
+        app:tint="@color/myColorBlack" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/minusBtn"
@@ -144,7 +139,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guidlineCenter"
         app:maxImageSize="@dimen/_14sdp"
-        app:srcCompat="@drawable/minus_icon" />
+        app:srcCompat="@drawable/minus_icon"
+        app:tint="@color/myColorBlack" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/locationBtn"
@@ -158,22 +154,27 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/minusBtn"
         app:maxImageSize="@dimen/_14sdp"
-        app:srcCompat="@drawable/location_icon" />
+        app:srcCompat="@drawable/location_icon"
+        app:tint="@color/myColorBlack" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <androidx.cardview.widget.CardView
         android:id="@+id/orderBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/_6sdp"
-        android:backgroundTint="@color/endColor"
+        android:layout_width="@dimen/mainButtonSize"
+        android:layout_height="@dimen/mainButtonSize"
+        android:layout_margin="@dimen/_6sdp"
         android:contentDescription="@string/app"
-        android:src="@drawable/exchange_icon"
-        app:borderWidth="0dp"
+        app:cardCornerRadius="@dimen/_22sdp"
         app:layout_constraintBottom_toTopOf="@id/textOrder"
         app:layout_constraintEnd_toStartOf="@id/borderBtn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:maxImageSize="@dimen/_20sdp"
-        app:tint="@color/myColorWhite" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            style="@style/mainButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/exchange_icon"
+            app:tint="@color/mainIconColor" />
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/textOrder"
@@ -186,20 +187,24 @@
         app:layout_constraintEnd_toStartOf="@id/borderBtn"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <androidx.cardview.widget.CardView
         android:id="@+id/borderBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/mainButtonSize"
+        android:layout_height="@dimen/mainButtonSize"
         android:layout_margin="@dimen/_6sdp"
-        android:backgroundTint="@color/endColor"
         android:contentDescription="@string/app"
-        app:borderWidth="0dp"
+        app:cardCornerRadius="@dimen/_22sdp"
         app:layout_constraintBottom_toTopOf="@id/textBorder"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:maxImageSize="@dimen/_20sdp"
-        app:srcCompat="@drawable/rocket_icon"
-        app:tint="@color/myColorWhite" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            style="@style/mainButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/rocket_icon"
+            app:tint="@color/mainIconColor" />
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/textBorder"
@@ -212,20 +217,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <androidx.cardview.widget.CardView
         android:id="@+id/rateBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/mainButtonStyle"
+        android:layout_width="@dimen/mainButtonSize"
+        android:layout_height="@dimen/mainButtonSize"
         android:layout_margin="@dimen/_6sdp"
-        android:backgroundTint="@color/endColor"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
         android:contentDescription="@string/app"
-        app:borderWidth="0dp"
+        android:focusable="true"
+        app:cardCornerRadius="@dimen/_22sdp"
         app:layout_constraintBottom_toTopOf="@id/textRates"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/borderBtn"
-        app:maxImageSize="@dimen/_20sdp"
-        app:srcCompat="@drawable/tarif_icon"
-        app:tint="@color/myColorWhite" />
+        app:layout_constraintStart_toEndOf="@id/borderBtn">
+
+        <ImageView
+            style="@style/mainButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/tarif_icon"
+            app:tint="@color/mainIconColor" />
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/textRates"
