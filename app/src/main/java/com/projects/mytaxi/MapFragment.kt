@@ -107,18 +107,21 @@ class MapFragment : Fragment() {
                     if (isDarkMode) {
                         // Dark mode is now enabled
                         Log.d(TAG, "---------light")
-                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                        binding.mapView.getMapboxMap().loadStyleUri(
-                            Style.TRAFFIC_NIGHT
-                        )
-                    } else {
-                        // Light mode is now enabled
-                        Log.d(TAG, "---------night")
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
                         binding.mapView.getMapboxMap().loadStyleUri(
                             Style.MAPBOX_STREETS
                         )
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+                    } else {
+                        // Light mode is now enabled
+                        Log.d(TAG, "---------night")
+                        binding.mapView.getMapboxMap().loadStyleUri(
+                            Style.TRAFFIC_NIGHT
+
+                        )
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
+
                     }
                 }
             }
@@ -126,14 +129,16 @@ class MapFragment : Fragment() {
         requireContext().registerReceiver(broadcastReceiver, intentFilter)
 
         binding.drawerMenuBtn.setOnClickListener {
-          //  val view = inflater.inflate(R.layout.fragment_my, container, false)
-
-            // Get a reference to the DrawerLayout object from the activity
             val drawerLayout = requireActivity().findViewById<DrawerLayout>(R.id.drawerLayout)
-
-            // Open the drawer
             drawerLayout.openDrawer(GravityCompat.START)
+        }
 
+        binding.menuBtn.setOnClickListener {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
+        binding.minusBtn.setOnClickListener {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+           // AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
 
         binding.locationBtn.setOnClickListener {
@@ -215,7 +220,8 @@ class MapFragment : Fragment() {
                 .build()
         )
         binding.mapView.getMapboxMap().loadStyleUri(
-            //Style.TRAFFIC_NIGHT
+          //  Style.TRAFFIC_NIGHT
+           // Style.MAPBOX_STREETS
             when (currentNightMode) {
                 Configuration.UI_MODE_NIGHT_NO -> {
                     Style.MAPBOX_STREETS
