@@ -22,17 +22,18 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.mapbox.android.gestures.MoveGestureDetector
 import com.mapbox.common.MapboxSDKCommon
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
+import com.mapbox.maps.MapboxMap
 import com.mapbox.maps.Style
 import com.mapbox.maps.extension.style.expressions.dsl.generated.interpolate
-import com.mapbox.maps.logD
 import com.mapbox.maps.plugin.LocationPuck2D
+import com.mapbox.maps.plugin.animation.camera
 import com.mapbox.maps.plugin.gestures.OnMoveListener
 import com.mapbox.maps.plugin.gestures.gestures
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorBearingChangedListener
@@ -41,11 +42,8 @@ import com.mapbox.maps.plugin.locationcomponent.location
 import com.projects.mytaxi.dao.LocationInfo
 import com.projects.mytaxi.dao.LocationViewModel
 import com.projects.mytaxi.databinding.FragmentMapBinding
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
 
-@AndroidEntryPoint
 class MapFragment : Fragment() {
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
@@ -53,8 +51,7 @@ class MapFragment : Fragment() {
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private lateinit var locationPermissionHelper: LocationPermissionHelper
     private lateinit var locationInfo: LocationInfo
-    private val viewModel: LocationViewModel by viewModels()
-    //   private val  viewModel2 = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory(application = Application())).get(LocationViewModel::class.java)
+    private lateinit var viewModel: LocationViewModel
 
     private val onIndicatorBearingChangedListener = OnIndicatorBearingChangedListener {
         //binding.mapView.getMapboxMap().setCamera(CameraOptions.Builder().bearing(it).build())
@@ -94,6 +91,8 @@ class MapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
+        val mapboxMap: MapboxMap = binding.mapView.getMapboxMap()
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         fetchLocation()
         mapView = MapView(requireContext())
@@ -136,24 +135,28 @@ class MapFragment : Fragment() {
         binding.menuBtn.setOnClickListener {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         }
-        binding.minusBtn.setOnClickListener {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-           // AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        }
+
 
         binding.locationBtn.setOnClickListener {
             fetchLocation()
         }
-        var m = 15.0
         binding.plusBtn.setOnClickListener {
-            val mapboxMap = binding.mapView.getMapboxMap()
-            //  val cameraPosition = mapboxMap.getCamer
+            val currentZoomLevel = mapboxMap.cameraState.zoom + 0.5
+
             binding.mapView.getMapboxMap().setCamera(
                 CameraOptions.Builder()
-                    .zoom(m)
+                    .zoom(currentZoomLevel)
                     .build()
             )
-            m += 1.0
+        }
+        binding.minusBtn.setOnClickListener {
+            val currentZoomLevel = mapboxMap.cameraState.zoom - 0.5
+
+            binding.mapView.getMapboxMap().setCamera(
+                CameraOptions.Builder()
+                    .zoom(currentZoomLevel)
+                    .build()
+            )
         }
 
     }
@@ -181,16 +184,9 @@ class MapFragment : Fragment() {
                 locationInfo = LocationInfo()
                 locationInfo.lat = userLocation.latitude
                 locationInfo.lon = userLocation.longitude
-                // locationRepository = LocationRepository(locationInfo)
-                lifecycleScope.launch {
-                    Log.d(ControlsProviderService.TAG, "++++++++++++lifeSycleScope")
-                    // viewModel.insertLocation(locationInfo)
-                }
 
-                Log.d(
-                    ControlsProviderService.TAG,
-                    "********************************${userLocation}"
-                )
+                // save database
+                viewModel.insertLocation(locationInfo)
 
                 locationPermissionHelper =
                     LocationPermissionHelper(WeakReference(requireActivity()))
@@ -200,9 +196,7 @@ class MapFragment : Fragment() {
 
             } else {
                 val builder = AlertDialog.Builder(requireContext())
-                //builder.setTitle("Location permission")
                 builder.setMessage("To continue, turn on device\nlocation, which uses Google's\nlocation service")
-
                 builder.setPositiveButton("OK") { dialog, which ->
                     startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
                 }
@@ -220,8 +214,6 @@ class MapFragment : Fragment() {
                 .build()
         )
         binding.mapView.getMapboxMap().loadStyleUri(
-          //  Style.TRAFFIC_NIGHT
-           // Style.MAPBOX_STREETS
             when (currentNightMode) {
                 Configuration.UI_MODE_NIGHT_NO -> {
                     Style.MAPBOX_STREETS
@@ -229,11 +221,15 @@ class MapFragment : Fragment() {
                 Configuration.UI_MODE_NIGHT_YES -> {
                     Style.TRAFFIC_NIGHT
                 }
-                else -> {
+                Configuration.UI_MODE_NIGHT_MASK -> {
                     Style.TRAFFIC_NIGHT
                 }
+                else -> {
+                    Style.MAPBOX_STREETS
+                }
             }
-        ) {
+        )
+        {
             initLocationComponent()
             setupGesturesListener()
         }

@@ -1,11 +1,24 @@
 package com.projects.mytaxi.dao
 
-import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.room.Room
+import kotlinx.coroutines.launch
 
-@HiltViewModel
-class LocationViewModel @Inject constructor(private val repository: LocationRepository) :
-    ViewModel() {
-     suspend fun insertLocation(locationInfo: LocationInfo)=repository.insertLocation(locationInfo)
+
+class LocationViewModel(application: Application) : AndroidViewModel(application) {
+    private val myDao: LocationDao
+    private val myDataBase =
+        Room.databaseBuilder(application, AppDataBase::class.java, "my_database").build()
+
+    init {
+        myDao = myDataBase.loactionDao()
+    }
+
+    fun insertLocation(locationInfo: LocationInfo) {
+        viewModelScope.launch {
+            myDao.insert(locationInfo)
+        }
+    }
 }
