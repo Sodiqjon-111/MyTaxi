@@ -20,20 +20,25 @@
         app:mapbox_cameraTargetLng="69.2401"
         app:mapbox_cameraZoom="9.0" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <androidx.cardview.widget.CardView
         android:id="@+id/drawerMenuBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_32sdp"
+        android:layout_height="@dimen/_32sdp"
         android:layout_margin="@dimen/_12sdp"
         android:backgroundTint="@color/myColorWhite"
-        android:contentDescription="@string/app_name"
-        app:borderWidth="0dp"
-        app:fabSize="mini"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        app:cardCornerRadius="@dimen/_16sdp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:maxImageSize="@dimen/_14sdp"
-        app:srcCompat="@drawable/drawer_icon2"
-        app:tint="@color/myColorBlack" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/drawer_icon2" />
+    </androidx.cardview.widget.CardView>
 
     <Button
         style="@style/myLeftButton"
@@ -58,13 +63,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
-
         android:id="@+id/notificationBtn"
-        android:layout_width="@dimen/_34sdp"
-        android:layout_height="@dimen/_34sdp"
+        android:layout_width="@dimen/_32sdp"
+        android:layout_height="@dimen/_32sdp"
         android:layout_margin="@dimen/_12sdp"
         android:backgroundTint="@color/myColorWhite"
-        app:cardCornerRadius="@dimen/_17sdp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        app:cardCornerRadius="@dimen/_16sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 

@@ -102,11 +102,8 @@ class MapFragment : Fragment() {
                 data?.let { viewModel.insertLocation(it) }
             }
         }
-
         val filter = IntentFilter("my_custom_action")
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(receiver, filter)
-
-
         val mapboxMap: MapboxMap = binding.mapView.getMapboxMap()
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         fetchLocation()
@@ -138,6 +135,7 @@ class MapFragment : Fragment() {
                 }
             }
         }
+
         requireContext().registerReceiver(broadcastReceiver, intentFilter)
 
         binding.drawerMenuBtn.setOnClickListener {
@@ -155,7 +153,6 @@ class MapFragment : Fragment() {
         }
         binding.plusBtn.setOnClickListener {
             val currentZoomLevel = mapboxMap.cameraState.zoom + 0.5
-
             binding.mapView.getMapboxMap().setCamera(
                 CameraOptions.Builder()
                     .zoom(currentZoomLevel)
@@ -164,7 +161,6 @@ class MapFragment : Fragment() {
         }
         binding.minusBtn.setOnClickListener {
             val currentZoomLevel = mapboxMap.cameraState.zoom - 0.5
-
             binding.mapView.getMapboxMap().setCamera(
                 CameraOptions.Builder()
                     .zoom(currentZoomLevel)
@@ -205,7 +201,6 @@ class MapFragment : Fragment() {
                 builder.setMessage("To continue, turn on device\nlocation, which uses Google's\nlocation service")
                 builder.setPositiveButton("OK") { dialog, which ->
                     startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-
                 }
                 builder.setNegativeButton("No,thanks") { dialog, which ->
                 }
