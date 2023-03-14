@@ -10,7 +10,6 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
 import android.provider.Settings
-import android.service.controls.ControlsProviderService
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,19 +20,17 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.mapbox.android.gestures.MoveGestureDetector
 import com.mapbox.common.MapboxSDKCommon
 import com.mapbox.maps.CameraOptions
-import com.mapbox.maps.MapView
 import com.mapbox.maps.MapboxMap
 import com.mapbox.maps.Style
 import com.mapbox.maps.extension.style.expressions.dsl.generated.interpolate
 import com.mapbox.maps.plugin.LocationPuck2D
-import com.mapbox.maps.plugin.animation.camera
 import com.mapbox.maps.plugin.gestures.OnMoveListener
 import com.mapbox.maps.plugin.gestures.gestures
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorBearingChangedListener
@@ -42,6 +39,7 @@ import com.mapbox.maps.plugin.locationcomponent.location
 import com.projects.mytaxi.dao.LocationInfo
 import com.projects.mytaxi.dao.LocationViewModel
 import com.projects.mytaxi.databinding.FragmentMapBinding
+import com.projects.mytaxi.service.LocationService
 import java.lang.ref.WeakReference
 
 class MapFragment : Fragment() {
@@ -50,7 +48,6 @@ class MapFragment : Fragment() {
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private lateinit var locationPermissionHelper: LocationPermissionHelper
-    private lateinit var locationInfo: LocationInfo
     private lateinit var viewModel: LocationViewModel
 
     private val onIndicatorBearingChangedListener = OnIndicatorBearingChangedListener {
@@ -74,7 +71,6 @@ class MapFragment : Fragment() {
         override fun onMoveEnd(detector: MoveGestureDetector) {}
     }
 
-    var mapView: MapView? = null
     val currentNightMode: Int = MapboxSDKCommon.getContext().getResources()
         .getConfiguration().uiMode and Configuration.UI_MODE_NIGHT_MASK
 
@@ -90,12 +86,30 @@ class MapFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(
+                android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                android.Manifest.permission.ACCESS_FINE_LOCATION,
+            ),
+            0
+        )
+
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val data = intent.getParcelableExtra("data_key") as? LocationInfo
+                data?.let { viewModel.insertLocation(it) }
+            }
+        }
+
+        val filter = IntentFilter("my_custom_action")
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(receiver, filter)
+
+
         val mapboxMap: MapboxMap = binding.mapView.getMapboxMap()
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         fetchLocation()
-        mapView = MapView(requireContext())
 
         val intentFilter = IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED)
         val broadcastReceiver = object : BroadcastReceiver() {
@@ -116,7 +130,6 @@ class MapFragment : Fragment() {
                         Log.d(TAG, "---------night")
                         binding.mapView.getMapboxMap().loadStyleUri(
                             Style.TRAFFIC_NIGHT
-
                         )
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
@@ -175,19 +188,12 @@ class MapFragment : Fragment() {
             )
             return
         }
-
         task.addOnSuccessListener { loc ->
             if (loc != null) {
-                val userLocation = android.location.Location("")
-                userLocation.latitude = loc.latitude
-                userLocation.longitude = loc.longitude
-                locationInfo = LocationInfo()
-                locationInfo.lat = userLocation.latitude
-                locationInfo.lon = userLocation.longitude
-
-                // save database
-                viewModel.insertLocation(locationInfo)
-
+                Intent(requireContext().applicationContext, LocationService::class.java).apply {
+                    action = LocationService.ACTION_START
+                    requireContext().startService(this)
+                }
                 locationPermissionHelper =
                     LocationPermissionHelper(WeakReference(requireActivity()))
                 locationPermissionHelper.checkPermissions {
@@ -199,6 +205,7 @@ class MapFragment : Fragment() {
                 builder.setMessage("To continue, turn on device\nlocation, which uses Google's\nlocation service")
                 builder.setPositiveButton("OK") { dialog, which ->
                     startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+
                 }
                 builder.setNegativeButton("No,thanks") { dialog, which ->
                 }
