@@ -1,22 +1,21 @@
 package com.projects.mytaxi
 
-import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.location.LocationManager
 import android.os.Bundle
-import android.provider.Settings
+import android.service.controls.ControlsProviderService
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -87,55 +86,40 @@ class MapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(
-                android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                android.Manifest.permission.ACCESS_FINE_LOCATION,
-            ),
-            0
-        )
-
         val receiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 val data = intent.getParcelableExtra("data_key") as? LocationInfo
                 data?.let { viewModel.insertLocation(it) }
             }
+
         }
         val filter = IntentFilter("my_custom_action")
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(receiver, filter)
         val mapboxMap: MapboxMap = binding.mapView.getMapboxMap()
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        fetchLocation()
+        onMapReady()
 
         val intentFilter = IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED)
         val broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 if (intent?.action == Intent.ACTION_CONFIGURATION_CHANGED) {
+
                     val isDarkMode =
-                        resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+                        requireContext().resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
                     if (isDarkMode) {
-                        // Dark mode is now enabled
-                        Log.d(TAG, "---------light")
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                         binding.mapView.getMapboxMap().loadStyleUri(
                             Style.MAPBOX_STREETS
                         )
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
                     } else {
-                        // Light mode is now enabled
-                        Log.d(TAG, "---------night")
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                         binding.mapView.getMapboxMap().loadStyleUri(
                             Style.TRAFFIC_NIGHT
                         )
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-
-
                     }
                 }
             }
         }
-
         requireContext().registerReceiver(broadcastReceiver, intentFilter)
 
         binding.drawerMenuBtn.setOnClickListener {
@@ -149,7 +133,7 @@ class MapFragment : Fragment() {
 
 
         binding.locationBtn.setOnClickListener {
-            fetchLocation()
+            checkGps()
         }
         binding.plusBtn.setOnClickListener {
             val currentZoomLevel = mapboxMap.cameraState.zoom + 0.5
@@ -167,46 +151,34 @@ class MapFragment : Fragment() {
                     .build()
             )
         }
-
-    }
-
-    private fun fetchLocation() {
-        val task = mFusedLocationClient.lastLocation
-
-        if (ActivityCompat.checkSelfPermission(
-                requireActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                requireActivity(), arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 101
-            )
-            return
+        val intentFilterLocation = IntentFilter().apply {
+            addAction(LocationManager.PROVIDERS_CHANGED_ACTION)
         }
-        task.addOnSuccessListener { loc ->
-            if (loc != null) {
-                Intent(requireContext().applicationContext, LocationService::class.java).apply {
-                    action = LocationService.ACTION_START
-                    requireContext().startService(this)
-                }
-                locationPermissionHelper =
-                    LocationPermissionHelper(WeakReference(requireActivity()))
-                locationPermissionHelper.checkPermissions {
-                    onMapReady()
-                }
+        val broadcastReceiverLocation = object : BroadcastReceiver() {
 
-            } else {
-                val builder = AlertDialog.Builder(requireContext())
-                builder.setMessage("To continue, turn on device\nlocation, which uses Google's\nlocation service")
-                builder.setPositiveButton("OK") { dialog, which ->
-                    startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent?.action == LocationManager.PROVIDERS_CHANGED_ACTION) {
+                    val locationManager =
+                        context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                    val isGPSEnabled =
+                        locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                    if (isGPSEnabled) {
+                        // GPS is enabled, do something
+                        Intent(
+                            requireContext().applicationContext,
+                            LocationService::class.java
+                        ).apply {
+                            action = LocationService.ACTION_START
+                            requireContext().startService(this)
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), "Turn on GPS", Toast.LENGTH_SHORT).show()
+                    }
                 }
-                builder.setNegativeButton("No,thanks") { dialog, which ->
-                }
-                builder.show()
             }
         }
+        requireContext().registerReceiver(broadcastReceiverLocation, intentFilterLocation)
+
     }
 
     private fun onMapReady() {
@@ -223,11 +195,8 @@ class MapFragment : Fragment() {
                 Configuration.UI_MODE_NIGHT_YES -> {
                     Style.TRAFFIC_NIGHT
                 }
-                Configuration.UI_MODE_NIGHT_MASK -> {
-                    Style.TRAFFIC_NIGHT
-                }
                 else -> {
-                    Style.MAPBOX_STREETS
+                    Style.TRAFFIC_NIGHT
                 }
             }
         )
@@ -277,7 +246,6 @@ class MapFragment : Fragment() {
     }
 
     private fun onCameraTrackingDismissed() {
-        //Toast.makeText(this, "onCameraTrackingDismissed", Toast.LENGTH_SHORT).show()
         binding.mapView.location
             .removeOnIndicatorPositionChangedListener(onIndicatorPositionChangedListener)
         binding.mapView.location
@@ -302,4 +270,29 @@ class MapFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         locationPermissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
+
+    fun checkGps() {
+        val locationManager =
+            context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val isGPSEnabled =
+            locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        if (isGPSEnabled) {
+            // GPS is enabled, do something
+            Intent(
+                requireContext().applicationContext,
+                LocationService::class.java
+            ).apply {
+                action = LocationService.ACTION_START
+                requireContext().startService(this)
+            }
+            locationPermissionHelper =
+                LocationPermissionHelper(WeakReference(requireActivity()))
+            locationPermissionHelper.checkPermissions {
+                onMapReady()
+            }
+        } else {
+            Toast.makeText(requireContext(), "Turn on GPS", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 }
